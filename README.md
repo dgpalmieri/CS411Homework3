@@ -9,17 +9,17 @@ greatest contiguous subset sum algorithm, and the inversions algorithm.
 #### Background
 Given a sequence of numbers, the greatest contiguous sum (GCS) is the greatest
 sum that can be made by adding up some contiguous subsequence of the numbers.
-For example, consider the following sequence 6,−8,4,3,−1,−2,5,8,−9,4. The 
-contiguous subsequence with the greatest sum begins with the first 4 and ends 
-at the 8. So the GCS is 4+3+(−1)+(−2)+5+8=17. We could get a greater sum by 
+For example, consider the following sequence: 6,−8,4,3,−1,−2,5,8,−9,4.   
+The contiguous subsequence with the greatest sum begins with the first 4 and
+ends at the 8. So the GCS is 4+3+(−1)+(−2)+5+8=17. We could get a greater sum by
 adding in 6 and 4, but then the numbers added up would not be contiguous. It is
 acceptable to add up no numbers, thus getting a sum of zero. For example, the 
-GCS of the sequence−3,−4,−2 is 0, gotten by adding up none of the numbers. We 
+GCS of the sequence −3,−4,−2 is 0, gotten by adding up none of the numbers. We 
 wish to write an efficient algorithm to find the GCS of a given sequence. The 
 brute-force algorithm just finds the sums of all contiguous subsequences: Θ(n3)
 addition operations when given a sequence of n items. It is easy to improve this
 to Θ(n2), but using Divide-and-Conquer we can do even better. A naïve
-Divide-and-Conquer algorithm can easily get Θ(nlog n)(how?), but we can actually
+Divide-and-Conquer algorithm can easily get Θ(nlog n), but we can actually
 do better than that by calculating even more. (This technique is very similar
 to “loading the induction hypothesis”).
 
