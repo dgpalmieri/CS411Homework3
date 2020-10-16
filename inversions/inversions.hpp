@@ -13,14 +13,13 @@
 
 // ********************* FROM merge_sort.cpp, by G.G. Chappell *********************
 
-#include <iostream>
-#include <vector>
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <type_traits>
-#include<iterator>
+#include <vector>
 
+#include<iostream>
 
 // stableMerge
 // Merge two halves of a sequence, each sorted, into a single sorted
@@ -37,15 +36,15 @@
 //     [first, last) contains the same items as it did initially, but
 //      now sorted by < (in a stable manner).
 template <typename FDIter>
-int stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return type void is now int
+std::size_t stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return type void is now size_t
 {
     // ** C++03:
     using Value = typename std::iterator_traits<FDIter>::value_type;
     // ** C++11:
-//    using Value = typename remove_reference<decltype(*first)>::type;
+    //using Value = typename std::remove_reference<decltype(*first)>::type;
     // ** Is this really better?
 
-    std::vector<Value> buffer(distance(first, last));
+    std::vector<Value> buffer(std::distance(first, last));
                                 // Buffer for temporary copy of data
     FDIter in1 = first;         // Read location in 1st half
     FDIter in2 = middle;        // Read location in 2nd half
@@ -57,8 +56,10 @@ int stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return ty
     // Merge two sorted lists into a single list in buff.
     while (in1 != middle && in2 != last)
     {
-        if (*in2 < *in1)  // Must do comparison this way, to be stable.
+        if (*in2 < *in1){  // Must do comparison this way, to be stable.
             *out++ = *in2++;
+            inversions += std::distance(in1, middle); // CHANGED - Added this line (and brackets)
+        }
         else
             *out++ = *in1++;
     }
@@ -66,11 +67,11 @@ int stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return ty
     // Copy remainder of original sequence to buffer.
     // Only one of the following two copy calls will do anything, since
     //  the other is given an empty source range.
-    copy(in1, middle, out);
-    copy(in2, last, out);
+    std::copy(in1, middle, out);
+    std::copy(in2, last, out);
 
     // Copy buffer contents back to original sequence location.
-    copy(buffer.begin(), buffer.end(), first);
+    std::copy(buffer.begin(), buffer.end(), first);
 
     return inversions; // CHANGED - Added this line
 }
@@ -90,10 +91,11 @@ int stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return ty
 //     [first, last) contains the same items as it did initially,
 //      but now sorted by < (in a stable manner).
 template <typename FDIter>
-int mergeSort(FDIter first, FDIter last) // CHANGED - return type void is now int
+std::size_t mergeSort(FDIter first, FDIter last) // CHANGED - return type void is now size_t
 {
     // Compute size of sequence
     std::size_t size = std::distance(first, last);
+    std::size_t inversions = 0;
 
     // BASE CASE
     if (size <= 1)
@@ -104,11 +106,13 @@ int mergeSort(FDIter first, FDIter last) // CHANGED - return type void is now in
     std::advance(middle, size/2);  // middle is iterator to middle of range
 
     // Recursively sort the two lists
-    mergeSort(first, middle);
-    mergeSort(middle, last);
+    inversions += mergeSort(first, middle); // CHANGED - add return to inversions
+    inversions += mergeSort(middle, last); // CHANGED - add return to inversions
 
     // And merge them
-    return stableMerge(first, middle, last); // CHANGED - Added "return" to beginning of line
+    inversions += stableMerge(first, middle, last); // CHANGED - add return to inversions
+    return inversions; // CHANGED - Added this line
+
 }
 
 // ********************* MERGE_SORT.CPP ENDS *********************
