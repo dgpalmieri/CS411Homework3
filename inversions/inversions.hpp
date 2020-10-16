@@ -6,6 +6,11 @@
 #ifndef CONTIGSUM_HPP
 #define CONTIGSUM_HPP
 
+// Changes to the original mergesort file will be denoted
+// using a comment on the same line, beginning with "CHANGED - ",
+// and a short description of what was changed
+// Ex) ... // CHANGED - Added this line
+
 // ********************* FROM merge_sort.cpp, by G.G. Chappell *********************
 
 #include <iostream>
@@ -32,7 +37,7 @@
 //     [first, last) contains the same items as it did initially, but
 //      now sorted by < (in a stable manner).
 template <typename FDIter>
-void stableMerge(FDIter first, FDIter middle, FDIter last)
+int stableMerge(FDIter first, FDIter middle, FDIter last) // CHANGED - return type void is now int
 {
     // ** C++03:
     using Value = typename std::iterator_traits<FDIter>::value_type;
@@ -46,6 +51,8 @@ void stableMerge(FDIter first, FDIter middle, FDIter last)
     FDIter in2 = middle;        // Read location in 2nd half
     auto out = buffer.begin();  // Write location in buffer
     // ** auto! That *is* better than vector<Value>::iterator
+
+    std::size_t inversions = 0; // CHANGED - Added this line
 
     // Merge two sorted lists into a single list in buff.
     while (in1 != middle && in2 != last)
@@ -64,6 +71,8 @@ void stableMerge(FDIter first, FDIter middle, FDIter last)
 
     // Copy buffer contents back to original sequence location.
     copy(buffer.begin(), buffer.end(), first);
+
+    return inversions; // CHANGED - Added this line
 }
 
 
@@ -81,14 +90,14 @@ void stableMerge(FDIter first, FDIter middle, FDIter last)
 //     [first, last) contains the same items as it did initially,
 //      but now sorted by < (in a stable manner).
 template <typename FDIter>
-void mergeSort(FDIter first, FDIter last)
+int mergeSort(FDIter first, FDIter last) // CHANGED - return type void is now int
 {
     // Compute size of sequence
     std::size_t size = std::distance(first, last);
 
     // BASE CASE
     if (size <= 1)
-        return;
+        return 0;
 
     // RECURSIVE CASE
     FDIter middle = first;
@@ -99,15 +108,14 @@ void mergeSort(FDIter first, FDIter last)
     mergeSort(middle, last);
 
     // And merge them
-    stableMerge(first, middle, last);
+    return stableMerge(first, middle, last); // CHANGED - Added "return" to beginning of line
 }
 
 // ********************* MERGE_SORT.CPP ENDS *********************
 
 template<typename RAIter>
 std::size_t inversions(RAIter first, RAIter last){
-    mergeSort(first, last);
-    return 0;
+    return mergeSort(first, last);
 }
 
 #endif /* CONTIGSUM_HPP */
